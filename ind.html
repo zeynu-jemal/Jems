@@ -1,0 +1,554 @@
+<!DOCTYPE html><html lang="am">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="keywords" content="HTML, CSS, JavaScript" />
+  <title>ZEMAN ACADEMY SCHOOL</title>
+  <style>
+    :root{
+      --bg1:#007272;
+      --bg2:#0c5f5f;
+      --card:rgba(255,255,255,0.12);
+      --card2:rgba(255,255,255,0.18);
+      --text:#e8ffff;
+      --muted:#cdeeee;
+      --accent:#ffbb00;
+      --accent2:#3498db;
+      --border:rgba(255,255,255,0.55);
+      --shadow:0 10px 30px rgba(0,0,0,.18);
+    }
+    body.dark{
+      --bg1:#141e30;
+      --bg2:#243b55;
+      --card:rgba(255,255,255,0.08);
+      --card2:rgba(255,255,255,0.12);
+      --text:#f0f0f0;
+      --muted:#d8d8d8;
+      --accent:#ffcc4d;
+      --accent2:#6fb7ff;
+      --border:rgba(255,255,255,0.25);
+    }
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0;
+      padding:18px;
+      font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;
+      line-height:1.6;
+      color:var(--text);
+      background:linear-gradient(to bottom,var(--bg1),var(--bg2));
+      transition:.35s ease;
+    }
+    a{color:inherit}
+    h1,h2,h3{margin-top:0}
+    h2,h3{color:#fff;border-bottom:2px solid var(--border);padding-bottom:6px}
+    .page-shell{max-width:1400px;margin:0 auto}
+    .topbar{
+      display:flex;gap:12px;justify-content:space-between;align-items:center;
+      flex-wrap:wrap;margin-bottom:14px;
+    }
+    .brand{
+      display:flex;align-items:center;gap:12px;flex-wrap:wrap;
+    }
+    .brand-badge{
+      width:58px;height:58px;border-radius:18px;background:linear-gradient(135deg,var(--accent),var(--accent2));
+      display:grid;place-items:center;color:#102;text-shadow:none;font-weight:900;box-shadow:var(--shadow);
+    }
+    .controls{
+      display:flex;gap:10px;flex-wrap:wrap;align-items:center;
+    }
+    .btn, button, input, select, textarea{
+      font:inherit;
+    }
+    .btn, button{
+      cursor:pointer;border:none;border-radius:12px;padding:10px 14px;
+      background:linear-gradient(135deg,var(--accent2),#6aaef3);
+      color:#fff;box-shadow:var(--shadow);transition:.2s ease;
+    }
+    .btn:hover, button:hover{transform:translateY(-1px);filter:brightness(1.05)}
+    .btn.secondary{background:linear-gradient(135deg,#ffb84d,#ff8b4d)}
+    .btn.ghost{background:transparent;border:1px solid var(--border);box-shadow:none}
+    .hero{
+      padding:18px;border:1px solid var(--border);border-radius:22px;background:var(--card);
+      box-shadow:var(--shadow);backdrop-filter:blur(10px);margin-bottom:18px;
+    }
+    .hero h1{margin:0;font-size:clamp(1.7rem,4vw,3rem)}
+    .hero p{margin:.25rem 0 0;color:var(--muted)}
+    .layout{display:grid;grid-template-columns:280px 1fr;gap:18px;align-items:start}
+    .sidebar{
+      position:sticky;top:16px;align-self:start;
+      border:1px solid var(--border);border-radius:20px;background:var(--card);backdrop-filter:blur(10px);
+      box-shadow:var(--shadow);padding:14px;
+    }
+    .sidebar h3{border:none;padding-bottom:0;margin-bottom:8px}
+    .nav-links{display:grid;gap:8px}
+    .nav-links a{
+      text-decoration:none;padding:10px 12px;border-radius:12px;background:var(--card2);border:1px solid var(--border)
+    }
+    .nav-links a:hover{background:rgba(255,255,255,0.22)}
+    .main{display:grid;gap:18px}
+    .panel, .section-card{
+      border:1px solid var(--border);border-radius:20px;background:var(--card);backdrop-filter:blur(10px);
+      box-shadow:var(--shadow);padding:16px;
+    }
+    .grid-4{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+    .grid-2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+    .stat{
+      padding:14px;border-radius:18px;background:var(--card2);border:1px solid var(--border);
+    }
+    .stat strong{display:block;font-size:1.7rem}
+    .stat span{color:var(--muted)}
+    .search-wrap{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+    .search-wrap input{
+      flex:1;min-width:240px;padding:12px 14px;border-radius:12px;border:1px solid var(--border);
+      background:rgba(255,255,255,0.14);color:var(--text);outline:none;
+    }
+    .search-wrap input::placeholder{color:rgba(255,255,255,0.75)}
+    .note{
+      background-color:#16bb3299;border-left:5px solid #3498db;padding:12px;font-style:italic;border-radius:12px;
+    }
+    .section{margin-bottom:0}
+    table{
+      width:100%;border-collapse:collapse;margin:14px 0;background:rgba(255,255,255,0.06);overflow:hidden;border-radius:14px;overflow:auto;
+    }
+    th, td{border:1px solid var(--border);padding:10px;text-align:left;vertical-align:top}
+    th{background:rgba(242,242,242,0.18)}
+    ul, ol{padding-left:22px}
+    li{margin-bottom:8px}
+    .highlight{background:rgba(255,255,255,0.08);padding:12px;border-radius:14px;border:1px solid var(--border)}
+    details{border:1px solid var(--border);border-radius:16px;background:rgba(255,255,255,0.06);padding:10px 14px;margin-bottom:12px}
+    summary{cursor:pointer;font-weight:700}
+    .hidden{display:none !important}
+    .toolbar{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
+    .two-col{display:grid;grid-template-columns:1.2fr .8fr;gap:14px}
+    .mini-list{margin:0;padding-left:18px}
+    .mini-list li{margin-bottom:6px}
+    .floating-toggle{
+      position:fixed;right:14px;bottom:14px;z-index:20;display:flex;gap:10px;align-items:center;
+    }
+    .theme-toggle{
+      cursor:pointer;padding:12px 14px;border-radius:999px;background:rgba(255,255,255,0.2);border:1px solid var(--border);
+      box-shadow:var(--shadow);user-select:none;
+    }
+    .auth-overlay{
+      position:fixed;inset:0;background:rgba(0,0,0,0.58);display:none;align-items:center;justify-content:center;
+      z-index:50;padding:18px;
+    }
+    .auth-card{
+      width:min(460px,100%);background:linear-gradient(to bottom,rgba(20,30,48,.98),rgba(36,59,85,.98));
+      color:#f5f7ff;border-radius:24px;border:1px solid rgba(255,255,255,.2);box-shadow:var(--shadow);padding:20px;
+    }
+    .auth-card input, .auth-card select{
+      width:100%;margin:8px 0;padding:12px 14px;border:none;border-radius:12px;outline:none;
+      background:rgba(255,255,255,0.92);
+    }
+    .auth-card .row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+    .small{font-size:.92rem;color:var(--muted)}
+    .sticky-top{
+      position:sticky;top:0;z-index:5;background:linear-gradient(to bottom,rgba(0,0,0,0.14),rgba(0,0,0,0));padding-bottom:8px;
+    }
+    .tag{
+      display:inline-block;padding:4px 10px;border-radius:999px;background:rgba(255,255,255,.13);border:1px solid var(--border);
+      font-size:.85rem;margin-right:6px;margin-bottom:6px;
+    }
+    .print-only{display:none}@media (max-width: 1060px){
+  .layout{grid-template-columns:1fr}
+  .sidebar{position:relative;top:auto}
+  .grid-4,.grid-2,.two-col{grid-template-columns:1fr}
+}
+@media print{
+  body{background:#fff !important;color:#000 !important;padding:0}
+  .no-print,.floating-toggle,.sidebar,.auth-overlay,.toolbar,.search-wrap button,.search-wrap input{display:none !important}
+  .panel,.section-card,details{box-shadow:none !important;background:#fff !important;border-color:#ccc !important}
+  h2,h3{color:#000 !important;border-color:#000 !important}
+  .print-only{display:block}
+  a{text-decoration:none;color:#000}
+}
+
+  </style>
+</head>
+<body>
+  <div class="auth-overlay" id="authOverlay">
+    <div class="auth-card">
+      <h2 style="border:none;padding:0;margin-bottom:8px;">Login System</h2>
+      <p class="small">This is a front-end login layer for access and display control only.</p>
+      <input type="text" id="loginUser" placeholder="Username" />
+      <input type="password" id="loginPass" placeholder="Password" />
+      <select id="loginRole">
+        <option value="Admin">Admin</option>
+        <option value="Teacher">Teacher</option>
+        <option value="Parent">Parent</option>
+        <option value="Student">Student</option>
+      </select>
+      <div class="toolbar">
+        <button onclick="login()">Login</button>
+        <button class="btn secondary" onclick="logout()">Close</button>
+      </div>
+      <p class="small">Default login: <b>admin</b> / <b>1234</b></p>
+    </div>
+  </div>  <div class="page-shell">
+    <div class="topbar no-print">
+      <div class="brand">
+        <div class="brand-badge">ZA</div>
+        <div>
+          <div class="tag">School Profile</div>
+          <div class="small">Modernized layout with added features</div>
+        </div>
+      </div>
+      <div class="controls">
+        <button class="btn ghost" onclick="openLogin()">Login</button>
+        <button class="btn ghost" onclick="window.print()">Print</button>
+        <button class="btn secondary" onclick="toggleTheme()">🌓 Theme</button>
+      </div>
+    </div><section class="hero">
+  <button style="width:100%;min-height:100px;color:gold;background-color:#3498db;border:2px solid gold;border-style:double;border-radius:18px;">
+    <h1 style="margin:0;"><ins>ZEMAN ACADEMY</ins></h1>
+    <b>KNOWLEDGE WITH DICIPLINE</b>
+  </button>
+  <p style="margin-top:12px;">Welcome to the school rules, staff, students, clubs, committees, and meeting schedules page.</p>
+  <div class="toolbar no-print">
+    <span class="tag">Dark Mode</span>
+    <span class="tag">Login</span>
+    <span class="tag">Search</span>
+    <span class="tag">Print</span>
+    <span class="tag">Responsive</span>
+  </div>
+</section>
+
+<div class="layout">
+  <aside class="sidebar no-print">
+    <h3>Navigation</h3>
+    <div class="nav-links">
+      <a href="#stats">School Stats</a>
+      <a href="#rules">Rules & Regulations</a>
+      <a href="#discipline">Discipline</a>
+      <a href="#parents">Parents</a>
+      <a href="#structure">Structure</a>
+      <a href="#students">Students</a>
+      <a href="#teachers">Teachers</a>
+      <a href="#meetings">Meetings</a>
+      <a href="#clubs">Clubs</a>
+      <a href="#committees">Committees</a>
+      <a href="#links">Contacts</a>
+    </div>
+  </aside>
+
+  <main class="main">
+    <section class="panel" id="stats">
+      <h2>Live School Overview</h2>
+      <div class="grid-4">
+        <div class="stat"><strong>7</strong><span>Student classes listed</span></div>
+        <div class="stat"><strong>18</strong><span>Teachers listed</span></div>
+        <div class="stat"><strong>6</strong><span>Clubs</span></div>
+        <div class="stat"><strong>3</strong><span>Structured sections</span></div>
+      </div>
+      <p class="small" style="margin-top:10px;">Counts are displayed from the information already on this page.</p>
+    </section>
+
+    <section class="panel no-print">
+      <h2>Search the Page</h2>
+      <div class="search-wrap">
+        <input type="text" id="searchBox" placeholder="Search rules, teachers, classes, clubs, committees..." oninput="searchPage()" />
+        <button onclick="clearSearch()">Clear</button>
+      </div>
+      <p class="small">Typing here highlights matching items and hides unrelated content.</p>
+    </section>
+
+    <section class="section-card" id="rules">
+      <header>
+        <h2>የዘማን አካዳሚ የተማሪዎችና የወላጆች መተዳደሪያ ደንብ (Rules and Regulations)</h2>
+      </header>
+
+      <details open>
+        <summary>መግቢያ (Introduction)</summary>
+        <p>ይህ የትምህርት ቤት የተማሪዎችና የወላጆች መተዳደሪያ ደንብ ያስፈለገበት ዋናው ምክንያት ከማስተማር ሂደቱ ጎን ለጎን ልጆቻችን በስነ-ምግባር ታንጸው እንዲያድጉ ለማስቻል ነው:: ይህም በትምህርት ቤቱ እና በወላጆች መካከል ጥብቅ ግንኙነት እንዲኖር ይረዳል::</p>
+      </details>
+
+      <details>
+        <summary>1. የተማሪዎች ምዝገባ (Student Registration)</summary>
+        <ul>
+          <li><strong>1.1.</strong> እድሜያቸው ከ4 አመት በታች የሆኑ ህጻናት ት/ቤቱ አይቀበልም::</li>
+          <li><strong>1.2.</strong> ከኬጂ 2 ጀምሮ የሚገቡ አዲስ ተማሪዎች ከመመዝገባቸው በፊት የትምህርት የመግቢያ ፈተና ይወስዳሉ::</li>
+          <li><strong>1.4.</strong> ለአዲስ ተመዝጋቢዎች ከመግቢያ ፈተናው በተጨማሪ ያለፉበት ትምህርት ቤት የትራንስክሪፕት እና የባህሪ መግለጫ ማቅረብ ይኖርባቸዋል::</li>
+          <li><strong>1.5.</strong> መረጃው ከዘማን ትምህርት ቤት የማለፊያ ውጤት በታች ከሆነና በባህሪ (conduct) የተሰጠው ውጤት ከ 'B' በታች ካሳየ ተማሪው ተቀባይነት አያገኝም::</li>
+          <li><strong>1.8.</strong> ለ 1 ክፍል መግቢያ እድሜ 7 አመት ይሆናል::</li>
+        </ul>
+      </details>
+
+      <details>
+        <summary>2. የተማሪዎች የአለባበስ ስርዓት (Student Dress Code)</summary>
+        <ul>
+          <li><strong>2.1.</strong> ማንኛውም ተማሪ ወደ ትምህርት ቤት ሲመጣ ንፁህና የተስተካከለ የትምህርት ቤቱን የደንብ ልብስ መልበስ አለበት::</li>
+          <li><strong>2.2.</strong> ከመደበኛ ልብስ ውጭ የተለያየ ፋሽን ያላቸው ልብሶችን መልበስ አይፈቀድም::</li>
+          <li><strong>2.7.</strong> የተማሪዎች ፀጉር አቆራረጥ እንዲሁም አሰራር ያልተለመደና ጌጣጌጥ የበዛበት መሆን የለበትም::</li>
+          <li><strong>2.8.</strong> ማንኛውም ተማሪ የግል ንፅህናውን መጠበቅ አለበት:: (ጥፍር መቁረጥ፣ ንፁህ ጫማ ማድረግ ወዘተ)::</li>
+        </ul>
+      </details>
+
+      <details>
+        <summary>3. ቁርስና ምሳ (Breakfast and Lunch)</summary>
+        <ul>
+          <li><strong>3.1.</strong> ተማሪዎች የራሳቸውን ምግብ ከቤታቸው ይዘው ይመጣሉ::</li>
+          <li><strong>3.2.</strong> በት/ቤቱ ውስጥ ማንኛውንም ጣፋጭ ኬክ፣ ከረሜላ እና ማስቲካ ይዞ መገኘት አይፈቀድም::</li>
+          <li><strong>3.5.</strong> በልዩ ሁኔታ ካልሆነ በስተቀር ተማሪዎች ከወላጅ በሚሰጣቸው ገንዘብ ከተለያዩ ሱቆች ምግብ መግዛት አይችሉም::</li>
+        </ul>
+      </details>
+
+      <details>
+        <summary>4. ጤና እና ንፅህና (Health and Hygiene)</summary>
+        <p>ትምህርት ቤቱ የተማሪዎችን የግል፣ የጥርስና የፀጉር ንፅህና ሁልጊዜ ክትትል ያደርጋል:: ተማሪዎች ወደ ትምህርት ቤት ከመምጣታቸው በፊት ተላላፊ ከሆኑ በሽታዎች ነፃ መሆናቸውን ቤተሰብ ማረጋገጥ ይኖርበታል::</p>
+      </details>
+
+      <details>
+        <summary>5. ተማሪዎችን ወደ ትምህርት ቤት ማድረስና መመለስ</summary>
+        <ul>
+          <li><strong>5.7.</strong> የተማሪዎች የመግቢያ ሰዓት ከጠዋቱ 1:30 እስከ 2:00 ብቻ ነው::</li>
+          <li><strong>5.8.</strong> ተማሪዎችን ወደ ቤት የመመለሻ ሰዓት ለኬጂ 9:05 ሲሆን ለሌሎች 9:25 እንዲሁም የጥናት ፕሮግራም ላላቸው 10:05 ይጠናቀቃል::</li>
+        </ul>
+      </details>
+    </section>
+
+    <section class="section-card" id="discipline">
+      <h2>የዲሲፕሊን እርምጃዎች (Disciplinary Actions)</h2>
+      <table>
+        <tr>
+          <th>ደረጃ</th>
+          <th>የሚወሰድ እርምጃ</th>
+          <th>ጥፋቱን የሚወስደው መምህር</th>
+        </tr>
+        <tr><td>1</td><td>በጥፋቱ ላይ መምከር</td><td>ጥፋቱን ያገኘው መምህር</td></tr>
+        <tr><td>2</td><td>የይቅርታ ደብዳቤ</td><td>ጥፋቱን ያገኘው መምህር</td></tr>
+        <tr><td>3</td><td>የመጀመሪያ የቃል ማስጠንቀቂያ</td><td>የክፍል ተጠሪ መምህር</td></tr>
+        <tr><td>4</td><td>ሁለተኛ የቃል ማስጠንቀቂያ</td><td>የት/ቤቱ ሱፐርቫይዘር</td></tr>
+        <tr><td>5</td><td>የመጀመሪያ የጽሁፍ ማስጠንቀቂያ</td><td>የት/ቤቱ አካዳሚክ ዳይረክተሩ ጋር መነጋገር</td></tr>
+        <tr><td>6</td><td>የመጨረሻ የጽሁፍ ማስጠንቀቂያ</td><td>የዲሲፕሊን ኮሚተ ለዋና ዳይረክተሩ አቅርቦ እንዲወሰን በማድረግ</td></tr>
+      </table>
+    </section>
+
+    <section class="section-card" id="parents">
+      <h2>የወላጆች መብትና ግዴታዎች (Rights and Duties of Parents)</h2>
+      <ul>
+        <li>የልጃቸውን የትምህርት ውጤትና ባህሪ የመከታተል መብት::</li>
+        <li>በትምህርት ቤቱ በሚደረጉ ስብሰባዎች ላይ የመገኘት ግዴታ::</li>
+        <li>የመገናኛ ደብተር (Communication Book) በየቀኑ የመፈረም ግዴታ::</li>
+      </ul>
+    </section>
+
+    <section class="section-card" id="structure">
+      <h2>ዘማን አካዳሚ</h2>
+      <div class="two-col">
+        <div>
+          <ol type="A">
+            <li><ins>የት/ቤቱ አስተዳደር</ins>
+              <ol>
+                <li>ርዕሰ መምህር</li>
+                <li>ም/ርዕሰ መምህር</li>
+              </ol>
+            </li>
+            <li><ins>ዩኒት አስተባባሪ</ins>
+              <ol>
+                <li><ins>መምህራን እስታፍ</ins>
+                  <ol>
+                    <li>ዲፓርትመንት</li>
+                    <li>የክበባት ሃላፊዎች</li>
+                    <li>የክፍል ሃላፊ</li>
+                  </ol>
+                </li>
+                <li><ins>የአስተዳደር እስታፍ</ins>
+                  <ol>
+                    <li>ት/ት ማበልጸጊያ ምስዕከል</li>
+                    <li>ቤተ መጽሃፍ</li>
+                  </ol>
+                </li>
+              </ol>
+            </li>
+            <li><ins>መምህራን</ins></li>
+            <li><ins>ተማሪዎች</ins></li>
+          </ol>
+        </div>
+        <div class="highlight">
+          <h3 style="border:none;padding-bottom:0;">Fast Access</h3>
+          <p class="small">Use the navigation links on the left, or search the page from the top section. The page is built to be cleaner on mobile too.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-card" id="students">
+      <h2>ተማሪዎች (Students)</h2>
+      <table>
+        <tr>
+          <th>ክፍል</th>
+          <th>ወንድ</th>
+          <th>ሲት</th>
+          <th>ድምር</th>
+        </tr>
+        <tr><td>Grade 1A</td><td>19</td><td>21</td><td>40</td></tr>
+        <tr><td>Grade 2A</td><td>19</td><td>22</td><td>41</td></tr>
+        <tr><td>Grade 3A</td><td>9</td><td>11</td><td>20</td></tr>
+        <tr><td>Grade 4A</td><td>11</td><td>14</td><td>25</td></tr>
+        <tr><td>Grade 5A</td><td>8</td><td>9</td><td>17</td></tr>
+        <tr><td>Grade 6A</td><td>4</td><td>4</td><td>8</td></tr>
+        <tr><td>Grade 7A</td><td>4</td><td>5</td><td>9</td></tr>
+      </table>
+    </section>
+
+    <section class="section-card" id="teachers">
+      <h2>መምህራን (Teachers)</h2>
+      <table>
+        <tr>
+          <th>ተራ ቁጥር</th>
+          <th>የመምህር ስም</th>
+          <th>የሚያስተምረው የት/ት አይነት(የስራ ድርሻ)</th>
+          <th>የት/ት ደረጃ</th>
+        </tr>
+        <tr><td>1</td><td>መምህር ኢዘዲን</td><td>አካባቢ ሳይንስ፣ህብረተሰብ እና ማህበራዊ ሳይንስ</td><td>-</td></tr>
+        <tr><td>2</td><td>መምህር አብዱልሃፊዝ</td><td>ኢንግሊዝኛ</td><td>-</td></tr>
+        <tr><td>3</td><td>መምህር ሙጀረብ</td><td>ሳይንስ እና ስፖርት</td><td>BSC</td></tr>
+        <tr><td>4</td><td>መምህር ሙሃመድ ሳኒ</td><td>አረቢኛ እና ተርቢያ</td><td>-</td></tr>
+        <tr><td>5</td><td>መምህር አስናቀ</td><td>ሂሳብ፣አይሲቲ እና ስፖርት</td><td>-</td></tr>
+        <tr><td>6</td><td>መምህርት ዚነት</td><td>አማርኛ እና ግብረገብ</td><td>BSC</td></tr>
+        <tr><td>7</td><td>መምህርት ካሚላ</td><td>አፋን ኦሮሞ እና ቁርኣን</td><td>-</td></tr>
+        <tr><td>8</td><td>መምህርት ሮዛ</td><td>አማርኛ እና ግብረገብ</td><td>BIP</td></tr>
+        <tr><td>9</td><td>መምህር ፈይሰል</td><td>ሂሳብ አና PVA</td><td>BED</td></tr>
+        <tr><td>10</td><td>መምህር ነጋሽ</td><td>ዳይረክተር፣ሲቲዝንሺፕ</td><td>-</td></tr>
+        <tr><td>11</td><td>መምህር መስደር</td><td>ሲኢኦ</td><td>MA</td></tr>
+        <tr><td>12</td><td>መምህር አብዱልሃኪም</td><td>-</td><td>-</td></tr>
+        <tr><td>13</td><td>መምህር ገመደ</td><td>-</td><td>MA</td></tr>
+        <tr><td>14</td><td>መምህርት ፍርዶስ</td><td>ስፖርት</td><td>-</td></tr>
+        <tr><td>15</td><td>መምህር ምንተስኖት</td><td>PVA</td><td>BSC</td></tr>
+        <tr><td>16</td><td>መምህርት ረህማ አ/ሰላም</td><td></td><td>-</td></tr>
+        <tr><td>17</td><td>መምህርት ረህማ ኡመር</td><td></td><td>-</td></tr>
+        <tr><td>18</td><td>መምህር ሰለሞን</td><td>ኢንግሊዝኛ እና ስፖክን</td><td>BA</td></tr>
+      </table>
+    </section>
+
+    <section class="section-card" id="meetings">
+      <h2>2025 Regular Meeting Schedules</h2>
+      <table>
+        <tr>
+          <th>Types</th>
+          <th>Schedule</th>
+          <th>Time</th>
+        </tr>
+        <tr><td>With Teachers</td><td>Monthly</td><td>1</td></tr>
+        <tr><td>Clubs</td><td>Monthly</td><td>1</td></tr>
+        <tr><td>Committees</td><td>Monthly</td><td>1</td></tr>
+        <tr><td>Management</td><td>Weekly</td><td>1</td></tr>
+        <tr><td>PTA</td><td>Quarterly</td><td>1</td></tr>
+      </table>
+    </section>
+
+    <section class="section-card" id="clubs">
+      <h2>ክለቦች (Clubs)</h2>
+      <table>
+        <tr>
+          <th>ተ.ቁ</th>
+          <th>የክለቡ ስም</th>
+          <th>ሰብሳቢ</th>
+        </tr>
+        <tr><td>1.</td><td>ስርአተ ጾታ</td><td>ሮዛ</td></tr>
+        <tr><td>2.</td><td>አካባቢ ጥበቃ</td><td>ሙጀረብ</td></tr>
+        <tr><td>3.</td><td>ሰላምና ጸጥታ</td><td>ኢዘዲን</td></tr>
+        <tr><td>4.</td><td>ቋንቋና ሚኒሚድያ</td><td>ሰለሞን</td></tr>
+        <tr><td>5.</td><td>ጸረ-ሙስና</td><td>ዚነት</td></tr>
+        <tr><td>6.</td><td>ስፖርት</td><td>አብዱል ሃፊዝ</td></tr>
+      </table>
+    </section>
+
+    <section class="section-card" id="committees">
+      <h2>የተዋቀሩ ክ/ትምህርት</h2>
+      <table>
+        <tr>
+          <th>ተ.ቁ</th>
+          <th>ክ/ትምህርት</th>
+          <th>የስራ ድርሻ</th>
+        </tr>
+        <tr><td>1</td><td>ቋንቋ</td><td>ሰለሞን፡ሰብሳቢ አ/ሃፊዝ፡ጸሃፊ ሮዛ እና ካሚላ፡አባል</td></tr>
+        <tr><td>2</td><td>የሳይንስ ዘርፍ</td><td>ኢዘዲን፡ሰብሳቢ ሙጀረብ፡ጸሃፊ ምንተስኖት እና ፈይሰል፡አባል</td></tr>
+        <tr><td>3</td><td>የማ/ሳይንስ ዘርፍ</td><td>ዚነት፡ሰብሳቢ ሙጀረብ፡ጸሃፊ ረህማ፡አባል</td></tr>
+      </table>
+    </section>
+
+    <section class="section-card" id="committee-list">
+      <h2>የተዋቀሩ ኮሚቲዎች</h2>
+      <table>
+        <tr>
+          <th>ኮሚተዎች</th>
+          <th>አባላት</th>
+          <th>የውይይት ጊዘ በወር</th>
+        </tr>
+        <tr><td>የት/ት መሻሻል</td><td>ሰለሞን፡ሰብሳቢ አ/ሃፊዝ፡ጸሃፊ ሮዛ እና ካሚላ፡አባል</td><td>1</td></tr>
+        <tr><td>የፈተና እና ምዘና</td><td>ኢዘዲን፡ሰብሳቢ ሙጀረብ፡ጸሃፊ ምንተስኖት እና ፈይሰል፡አባል</td><td>1</td></tr>
+        <tr><td>የጥያቀ እና መልስ</td><td>ዚነት፡ሰብሳቢ ሙጀረብ፡ጸሃፊ ረህማ እና ፈይሰል፡አባል</td><td>1</td></tr>
+        <tr><td>የዲሲፕሊን</td><td>ኢዘዲን፡ሰብሳቢ ዚነት፡ጸሃፊ ኢልሃም፡አባል</td><td>1</td></tr>
+      </table>
+    </section>
+
+    <section class="section-card" id="links">
+      <h2>Quick Links</h2>
+      <div class="grid-2">
+        <div class="highlight">
+          <p class="print-only"><b>School information preserved exactly as provided.</b></p>
+          <p><ins>ማሳሰቢያ</ins> : ከላይ የተዘረዘሩትን ደንቦች መተላለፍ እንደ ጥፋቱ ክብደት ከትምህርት ቤት እስከ መሰናበት የሚያደርስ እርምጃ ሊያስከትል ይችላል::</p>
+        </div>
+        <div class="highlight">
+          <p><a href="https://t.me/+UkK7SYdVtMhjN2Zk" target="_blank">Join Telegram Channel</a></p>
+          <p><a href="https://t.me/@mesdernur" target="_blank">Get The School's CEO</a></p>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
+
+  </div>  <div class="floating-toggle no-print">
+    <div class="theme-toggle" onclick="toggleTheme()">🌓</div>
+    <div class="theme-toggle" onclick="scrollToTop()">⬆️</div>
+  </div>  <script>
+    // Theme
+    function toggleTheme(){
+      document.body.classList.toggle('dark');
+      localStorage.setItem('zemanTheme', document.body.classList.contains('dark') ? 'dark' : 'light');
+    }
+    (function restoreTheme(){
+      if(localStorage.getItem('zemanTheme') === 'dark') document.body.classList.add('dark');
+    })();
+
+    // Login system (front-end only)
+    function openLogin(){document.getElementById('authOverlay').style.display='flex';}
+    function logout(){document.getElementById('authOverlay').style.display='none';}
+    function login(){
+      const u=document.getElementById('loginUser').value.trim();
+      const p=document.getElementById('loginPass').value.trim();
+      const role=document.getElementById('loginRole').value;
+      if(u==='admin' && p==='1234'){
+        alert(`Welcome, ${u} (${role})`);
+        logout();
+      }else{
+        alert('Invalid login. Use admin / 1234.');
+      }
+    }
+
+    // Search highlighting
+    function searchPage(){
+      const q=document.getElementById('searchBox').value.toLowerCase().trim();
+      const sections=document.querySelectorAll('.section-card, .panel');
+      sections.forEach(sec=>{
+        const text=sec.innerText.toLowerCase();
+        const match=!q || text.includes(q);
+        sec.classList.toggle('hidden', !match);
+        if(match && q){
+          sec.style.outline='2px solid rgba(255, 187, 0, 0.8)';
+        }else{
+          sec.style.outline='none';
+        }
+      });
+    }
+    function clearSearch(){
+      const box=document.getElementById('searchBox');
+      box.value='';
+      searchPage();
+    }
+
+    function scrollToTop(){window.scrollTo({top:0,behavior:'smooth'});}
+  </script></body>
+</html>
