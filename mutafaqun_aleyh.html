@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Muttafaqun 'Alayh Directory</title>
+    
+    <!-- Google Fonts & FontAwesome -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <style>
+        :root {
+            --bg-dark: #090d16;
+            --bg-card: #131b2e;
+            --bg-input: #1c273e;
+            --accent: #10b981;
+            --accent-hover: #059669;
+            --text-main: #f8fafc;
+            --text-sub: #94a3b8;
+            --border: #2d3748;
+            --radius: 12px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        header {
+            background-color: var(--bg-card);
+            border-bottom: 1px solid var(--border);
+            padding: 1rem 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-weight: 700;
+            font-size: 1.2rem;
+            color: var(--accent);
+        }
+
+        .badge {
+            background: rgba(16, 185, 129, 0.15);
+            color: var(--accent);
+            border: 1px solid var(--accent);
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        main {
+            flex-grow: 1;
+            max-width: 900px;
+            width: 100%;
+            margin: 1.5rem auto;
+            padding: 0 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .filter-panel {
+            display: flex;
+            gap: 0.75rem;
+            background: var(--bg-card);
+            padding: 0.75rem;
+            border-radius: var(--radius);
+            border: 1px solid var(--border);
+        }
+
+        .search-input {
+            flex-grow: 1;
+            background: var(--bg-input);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--text-main);
+            padding: 0.75rem 1rem;
+            font-size: 0.95rem;
+            outline: none;
+        }
+
+        .search-input:focus {
+            border-color: var(--accent);
+        }
+
+        .hadith-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1.25rem;
+        }
+
+        .hadith-card {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1.25rem;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 0.75rem;
+        }
+
+        .hadith-number {
+            font-weight: 700;
+            color: var(--accent);
+            font-size: 0.9rem;
+        }
+
+        .arabic-text {
+            font-family: 'Amiri', serif;
+            font-size: 1.45rem;
+            line-height: 2.2;
+            text-align: right;
+            direction: rtl;
+            color: #f1f5f9;
+        }
+
+        .english-text {
+            font-size: 1rem;
+            line-height: 1.6;
+            color: #cbd5e1;
+            border-top: 1px dashed var(--border);
+            padding-top: 1rem;
+        }
+
+        .hadith-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.8rem;
+            color: var(--text-sub);
+        }
+
+        .loader {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 3rem;
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid var(--border);
+            border-top-color: var(--accent);
+            border-radius: 50%;
+            animation: spin 1s infinite linear;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo">
+            <i class="fa-solid fa-list-check"></i>
+            <span>Muttafaqun 'Alayh Feed</span>
+        </div>
+        <span class="badge">Bukhari & Muslim</span>
+    </header>
+
+    <main>
+        <div class="filter-panel">
+            <input type="text" id="searchInput" class="search-input" placeholder="Search Hadith text or topic..." onkeyup="filterHadiths()">
+        </div>
+
+        <div id="loader" class="loader">
+            <div class="spinner"></div>
+        </div>
+
+        <div id="hadithList" class="hadith-list"></div>
+    </main>
+
+    <script>
+        // Muttafaqun 'Alayh dataset IDs from HadeethEnc REST API
+        const muttafaqunIds = [2945, 2946, 2947, 2948, 2949, 2950, 2951, 2952, 2953, 2954, 2955, 2956];
+        let fetchedHadiths = [];
+
+        async function loadAllHadiths() {
+            const loader = document.getElementById('loader');
+            const listContainer = document.getElementById('hadithList');
+
+            try {
+                // Fetch English and Arabic records concurrently
+                const promises = muttafaqunIds.map(async (id, index) => {
+                    const [resEn, resAr] = await Promise.all([
+                        fetch(`https://hadeethenc.com/api/v1/hadeeths/one/?language=en&id=${id}`).then(r => r.json()),
+                        fetch(`https://hadeethenc.com/api/v1/hadeeths/one/?language=ar&id=${id}`).then(r => r.json())
+                    ]);
+                    return {
+                        id: index + 1,
+                        arabic: resAr.hadeeth,
+                        english: resEn.hadeeth,
+                        attribution: resEn.attribution || "Sahih al-Bukhari & Sahih Muslim"
+                    };
+                });
+
+                fetchedHadiths = await Promise.all(promises);
+                renderList(fetchedHadiths);
+
+            } catch (error) {
+                console.error("API error:", error);
+                listContainer.innerHTML = `<p style="color:red; text-align:center;">Error loading Hadiths. Please refresh.</p>`;
+            } finally {
+                loader.style.display = 'none';
+            }
+        }
+
+        function renderList(items) {
+            const listContainer = document.getElementById('hadithList');
+            listContainer.innerHTML = '';
+
+            items.forEach(item => {
+                const card = document.createElement('div');
+                card.className = 'hadith-card';
+                card.innerHTML = `
+                    <div class="card-header">
+                        <span class="hadith-number">Hadith #${item.id}</span>
+                        <span style="font-size: 0.8rem; color: var(--accent);"><i class="fa-solid fa-check-double"></i> Agreed Upon</span>
+                    </div>
+                    <div class="arabic-text">${item.arabic}</div>
+                    <div class="english-text">${item.english}</div>
+                    <div class="hadith-meta">
+                        <span>Source: ${item.attribution}</span>
+                    </div>
+                `;
+                listContainer.appendChild(card);
+            });
+        }
+
+        function filterHadiths() {
+            const query = document.getElementById('searchInput').value.toLowerCase();
+            const filtered = fetchedHadiths.filter(h => 
+                h.english.toLowerCase().includes(query) || h.arabic.includes(query)
+            );
+            renderList(filtered);
+        }
+
+        window.onload = loadAllHadiths;
+    </script>
+</body>
+</html>
