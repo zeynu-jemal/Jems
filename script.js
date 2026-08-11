@@ -226,7 +226,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     badgeClass: 'badge-quran',
                     title: `Surah ${m.surah.englishName} (${m.surah.number}:${m.numberInSurah})`,
                     text: m.text,
-                    link: `./HTML/qur'an.html?surah=${m.surah.number}&ayah=${m.numberInSurah}`
+                    link: `qur'an.html?surah=${m.surah.number}&ayah=${m.numberInSurah}`
                 }));
                 combinedResults.push(...qMatches);
             }
@@ -242,7 +242,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         badgeClass: 'badge-bukhari',
                         title: `Sahih Bukhari #${h.hadithnumber}`,
                         text: h.text,
-                        link: `./HTML/buhari.html?hadith=${h.hadithnumber}`
+                        link: `buhari.html?hadith=${h.hadithnumber}`
                     }));
                 combinedResults.push(...bMatches);
             }
@@ -258,7 +258,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         badgeClass: 'badge-muslim',
                         title: `Sahih Muslim #${h.hadithnumber}`,
                         text: h.text,
-                        link: `./HTML/muslim.html?hadith=${h.hadithnumber}`
+                        link: `muslim.html?hadith=${h.hadithnumber}`
                     }));
                 combinedResults.push(...mMatches);
             }
@@ -269,7 +269,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 badgeClass: 'badge-tafsir',
                 title: `Explore Tafsir for "${query}"`,
                 text: `Click to view commentary & exegesis related to this keyword on the Tafsir Explorer.`,
-                link: `./HTML/tafsir.html`
+                link: `tafsir.html`
             });
 
             renderSearchResults(combinedResults);
