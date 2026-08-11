@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Interactive Qibla Finder</title>
+  <style>
+    :root {
+      --bg: #0b132b;
+      --card-bg: #1c2541;
+      --accent-gold: #e0a96d;
+      --accent-green: #10b981;
+      --text-main: #ffffff;
+      --text-muted: #a0aec0;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background-color: var(--bg);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .container {
+      background: var(--card-bg);
+      width: 100%;
+      max-width: 420px;
+      padding: 30px 20px;
+      border-radius: 24px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+      text-align: center;
+      border: 1px solid rgba(224, 169, 109, 0.2);
+      position: relative;
+    }
+
+    h1 {
+      color: var(--accent-gold);
+      font-size: 1.5rem;
+      letter-spacing: 1px;
+      margin-bottom: 6px;
+    }
+
+    p.subtitle {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-bottom: 20px;
+    }
+
+    .compass-wrapper {
+      position: relative;
+      width: 250px;
+      height: 250px;
+      margin: 0 auto 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .compass-dial {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      border: 4px solid var(--accent-gold);
+      background: radial-gradient(circle, #1c2541 0%, #0b132b 100%);
+      box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.6);
+      transition: transform 0.2s cubic-bezier(0.1, 0.3, 0.1, 1);
+    }
+
+    .cardinal-label {
+      position: absolute;
+      font-weight: bold;
+      font-size: 1rem;
+      color: var(--text-muted);
+    }
+    .north { top: 10px; left: 50%; transform: translateX(-50%); color: #ef4444; }
+    .east  { right: 12px; top: 50%; transform: translateY(-50%); }
+    .south { bottom: 10px; left: 50%; transform: translateX(-50%); }
+    .west  { left: 12px; top: 50%; transform: translateY(-50%); }
+
+    .qibla-needle {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+      transition: transform 0.2s cubic-bezier(0.1, 0.3, 0.1, 1);
+    }
+
+    .qibla-pointer {
+      position: absolute;
+      top: 22px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .kaaba-icon {
+      width: 26px;
+      height: 26px;
+      background: #000;
+      border: 2px solid var(--accent-gold);
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 0 10px rgba(224, 169, 109, 0.5);
+    }
+
+    .kaaba-icon::after {
+      content: '';
+      width: 100%;
+      height: 4px;
+      background: var(--accent-gold);
+      margin-top: -8px;
+    }
+
+    .arrow-head {
+      width: 0;
+      height: 0;
+      border-left: 8px solid transparent;
+      border-right: 8px solid transparent;
+      border-bottom: 12px solid var(--accent-gold);
+      margin-bottom: -2px;
+    }
+
+    .aligned-ring {
+      position: absolute;
+      width: 260px;
+      height: 260px;
+      border-radius: 50%;
+      border: 3px dashed var(--accent-green);
+      opacity: 0;
+      transition: opacity 0.3s ease, transform 0.3s ease;
+      pointer-events: none;
+    }
+
+    .is-aligned .aligned-ring {
+      opacity: 1;
+      transform: scale(1.05);
+    }
+
+    .info-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .info-card {
+      background: rgba(255,255,255,0.04);
+      padding: 10px;
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,0.05);
+    }
+
+    .info-label {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      margin-bottom: 4px;
+    }
+
+    .info-value {
+      font-size: 1.05rem;
+      font-weight: 600;
+      color: var(--text-main);
+    }
+
+    .btn-group {
+      display: flex;
+      gap: 10px;
+    }
+
+    .btn {
+      background: var(--accent-gold);
+      color: #000;
+      border: none;
+      padding: 12px;
+      border-radius: 30px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      cursor: pointer;
+      flex: 1;
+      transition: all 0.2s ease;
+    }
+
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.1);
+      color: var(--text-main);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .status-text {
+      margin-top: 12px;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    /* Modal Styling */
+    .modal-overlay {
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(11, 19, 43, 0.97);
+      border-radius: 24px;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      padding: 24px 20px;
+      z-index: 10;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+
+    .modal-overlay.active {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+
+    .modal-title {
+      font-size: 1.1rem;
+      color: var(--accent-gold);
+    }
+
+    .close-btn {
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      font-size: 1.2rem;
+      cursor: pointer;
+    }
+
+    .search-box {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .search-box input {
+      flex: 1;
+      padding: 10px 14px;
+      border-radius: 8px;
+      border: 1px solid rgba(224, 169, 109, 0.4);
+      background: #121a30;
+      color: #fff;
+      font-size: 0.9rem;
+    }
+
+    .results-list {
+      list-style: none;
+      overflow-y: auto;
+      max-height: 220px;
+      text-align: left;
+      border-radius: 8px;
+      background: rgba(0,0,0,0.2);
+    }
+
+    .results-list li {
+      padding: 10px;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+      font-size: 0.82rem;
+      cursor: pointer;
+      color: var(--text-muted);
+    }
+
+    .results-list li:hover {
+      background: rgba(224, 169, 109, 0.15);
+      color: #fff;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container" id="mainContainer">
+    <!-- City Search Modal -->
+    <div class="modal-overlay" id="locationModal">
+      <div class="modal-header">
+        <div class="modal-title">Search Any City / Location</div>
+        <button class="close-btn" onclick="closeModal()">✕</button>
+      </div>
+      
+      <div class="search-box">
+        <input type="text" id="cityInput" placeholder="e.g. Addis Ababa, Cairo, Paris..." onkeyup="handleSearchKey(event)" />
+        <button class="btn" style="flex:0 0 70px;" onclick="searchLocation()">Search</button>
+      </div>
+
+      <ul class="results-list" id="searchResults">
+        <li style="text-align:center; padding: 20px;">Type a city name and tap Search</li>
+      </ul>
+    </div>
+
+    <h1>QIBLA FINDER</h1>
+    <p class="subtitle" id="locationDisplay">Location not set</p>
+
+    <div class="compass-wrapper">
+      <div class="aligned-ring"></div>
+      
+      <div class="compass-dial" id="dial">
+        <span class="cardinal-label north">N</span>
+        <span class="cardinal-label east">E</span>
+        <span class="cardinal-label south">S</span>
+        <span class="cardinal-label west">W</span>
+      </div>
+
+      <div class="qibla-needle" id="needle">
+        <div class="qibla-pointer">
+          <div class="arrow-head"></div>
+          <div class="kaaba-icon"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="info-grid">
+      <div class="info-card">
+        <div class="info-label">Qibla Bearing</div>
+        <div class="info-value" id="qiblaBearing">--°</div>
+      </div>
+      <div class="info-card">
+        <div class="info-label">Current Heading</div>
+        <div class="info-value" id="currentHeading">--°</div>
+      </div>
+    </div>
+
+    <div class="btn-group">
+      <button class="btn" id="startBtn" onclick="initApp()">Use GPS</button>
+      <button class="btn btn-secondary" onclick="openModal()">Search City</button>
+    </div>
+    
+    <div class="status-text" id="statusText">Press "Use GPS" or "Search City" to begin</div>
+  </div>
+
+  <script>
+    const KAABA_LAT = 21.4225;
+    const KAABA_LNG = 39.8262;
+
+    let userLat = null;
+    let userLng = null;
+    let targetQiblaBearing = null;
+    let currentHeading = 0;
+
+    const dial = document.getElementById('dial');
+    const needle = document.getElementById('needle');
+    const qiblaBearingEl = document.getElementById('qiblaBearing');
+    const currentHeadingEl = document.getElementById('currentHeading');
+    const statusText = document.getElementById('statusText');
+    const locationDisplay = document.getElementById('locationDisplay');
+    const mainContainer = document.getElementById('mainContainer');
+    const locationModal = document.getElementById('locationModal');
+
+    function openModal() {
+      locationModal.classList.add('active');
+    }
+
+    function closeModal() {
+      locationModal.classList.remove('active');
+    }
+
+    function handleSearchKey(e) {
+      if (e.key === 'Enter') searchLocation();
+    }
+
+    // Geocoding API via OpenStreetMap Nominatim
+    async function searchLocation() {
+      const query = document.getElementById('cityInput').value.trim();
+      const resultsList = document.getElementById('searchResults');
+      
+      if (!query) return;
+
+      resultsList.innerHTML = `<li style="text-align:center;">Searching locations...</li>`;
+
+      try {
+        const response = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}`);
+        const data = await response.json();
+
+        if (data.length === 0) {
+          resultsList.innerHTML = `<li style="text-align:center;">No matching cities found.</li>`;
+          return;
+        }
+
+        resultsList.innerHTML = '';
+        data.forEach(item => {
+          const li = document.createElement('li');
+          li.innerText = item.display_name;
+          li.onclick = () => {
+            const name = item.display_name.split(',')[0];
+            setCoordinates(parseFloat(item.lat), parseFloat(item.lon), name);
+            closeModal();
+          };
+          resultsList.appendChild(li);
+        });
+      } catch (err) {
+        resultsList.innerHTML = `<li style="text-align:center; color:#ef4444;">Search failed. Check connection.</li>`;
+      }
+    }
+
+    function initApp() {
+      if (!navigator.geolocation) {
+        statusText.innerText = "Geolocation not supported. Search for your city.";
+        openModal();
+        return;
+      }
+
+      statusText.innerText = "Acquiring location...";
+      
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          setCoordinates(position.coords.latitude, position.coords.longitude, "GPS Location");
+        },
+        (error) => {
+          statusText.innerText = "GPS disabled/denied. Search your city below.";
+          openModal();
+        },
+        { enableHighAccuracy: true, timeout: 5000 }
+      );
+    }
+
+    function setCoordinates(lat, lng, label) {
+      userLat = lat;
+      userLng = lng;
+      
+      targetQiblaBearing = calculateQiblaBearing(userLat, userLng);
+      qiblaBearingEl.innerText = `${targetQiblaBearing.toFixed(1)}°`;
+      locationDisplay.innerText = `📍 ${label} (${lat.toFixed(2)}°, ${lng.toFixed(2)}°)`;
+
+      statusText.innerText = `Location set! Calibration active.`;
+      startCompass();
+    }
+
+    function calculateQiblaBearing(lat1, lon1) {
+      const φ1 = lat1 * Math.PI / 180;
+      const φ2 = KAABA_LAT * Math.PI / 180;
+      const Δλ = (KAABA_LNG - lon1) * Math.PI / 180;
+
+      const y = Math.sin(Δλ) * Math.cos(φ2);
+      const x = Math.cos(φ1) * Math.sin(φ2) - Math.sin(φ1) * Math.cos(φ2) * Math.cos(Δλ);
+
+      let bearing = Math.atan2(y, x) * 180 / Math.PI;
+      return (bearing + 360) % 360;
+    }
+
+    function startCompass() {
+      if (typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceOrientationEvent.requestPermission === 'function') {
+        DeviceOrientationEvent.requestPermission()
+          .then(response => {
+            if (response === 'granted') {
+              window.addEventListener('deviceorientation', handleOrientation, true);
+            } else {
+              statusText.innerText = "Compass permission denied.";
+            }
+          })
+          .catch(console.error);
+      } else {
+        window.addEventListener('deviceorientationabsolute', handleOrientation, true) ||
+        window.addEventListener('deviceorientation', handleOrientation, true);
+      }
+    }
+
+    function handleOrientation(event) {
+      let compassHeading = null;
+
+      if (event.webkitCompassHeading) {
+        compassHeading = event.webkitCompassHeading;
+      } else if (event.alpha !== null) {
+        compassHeading = (360 - event.alpha) % 360;
+      }
+
+      if (compassHeading !== null) {
+        currentHeading = compassHeading;
+        currentHeadingEl.innerText = `${Math.round(currentHeading)}°`;
+        updateCompassDisplay();
+      }
+    }
+
+    function updateCompassDisplay() {
+      if (targetQiblaBearing === null) return;
+
+      dial.style.transform = `rotate(${-currentHeading}deg)`;
+
+      const relativeQiblaAngle = targetQiblaBearing - currentHeading;
+      needle.style.transform = `rotate(${relativeQiblaAngle}deg)`;
+
+      const normalizedAngle = Math.abs((relativeQiblaAngle + 180) % 360 - 180);
+      if (normalizedAngle < 5) {
+        mainContainer.classList.add('is-aligned');
+        statusText.innerText = "✨ Facing Qibla!";
+        statusText.style.color = "var(--accent-green)";
+      } else {
+        mainContainer.classList.remove('is-aligned');
+        statusText.innerText = "Align Kaaba icon to the top.";
+        statusText.style.color = "var(--text-muted)";
+      }
+    }
+  </script>
+</body>
+</html>

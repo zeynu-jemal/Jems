@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Islamic Hijri Calendar & Event Tracker - Nur AI</title>
+    
+    <!-- Google Fonts & FontAwesome -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <style>
+        :root {
+            --bg-gradient: linear-gradient(135deg, #02120e 0%, #06382b 40%, #02241b 80%, #0a0f0d 100%);
+            --card-glass: rgba(6, 44, 34, 0.75);
+            --border-glass: rgba(245, 158, 11, 0.3);
+            --gold-accent: #f59e0b;
+            --gold-glow: #fde047;
+            --emerald-light: #10b981;
+            --text-light: #f8fafc;
+            --text-muted: #94a3b8;
+            --sans-font: 'Plus Jakarta Sans', sans-serif;
+            --arabic-font: 'Amiri', serif;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: var(--sans-font);
+            background: var(--bg-gradient);
+            background-attachment: fixed;
+            color: var(--text-light);
+            min-height: 100vh;
+            padding: 20px 15px;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        /* Navbar Header */
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--card-glass);
+            border: 1px solid var(--border-glass);
+            padding: 12px 24px;
+            border-radius: 16px;
+            backdrop-filter: blur(12px);
+            margin-bottom: 25px;
+        }
+
+        .logo {
+            font-size: 1.3rem;
+            font-weight: 800;
+            color: var(--gold-accent);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .nav-btn {
+            color: var(--text-light);
+            text-decoration: none;
+            padding: 6px 14px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            border: 1px solid transparent;
+            transition: all 0.2s;
+        }
+
+        .nav-btn:hover, .nav-btn.active {
+            background: rgba(245, 158, 11, 0.15);
+            border-color: var(--gold-accent);
+            color: var(--gold-glow);
+        }
+
+        /* Hero Banner */
+        .hero {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .badge {
+            display: inline-block;
+            background: rgba(245, 158, 11, 0.15);
+            border: 1px solid var(--border-glass);
+            color: var(--gold-accent);
+            padding: 6px 18px;
+            border-radius: 30px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-bottom: 12px;
+        }
+
+        .hero h1 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            background: linear-gradient(180deg, #ffffff 0%, #fef08a 50%, #f59e0b 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 8px;
+        }
+
+        /* Today's Date Banner Card */
+        .today-card {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.25) 0%, rgba(245, 158, 11, 0.2) 100%);
+            border: 1px solid var(--border-glass);
+            border-radius: 20px;
+            padding: 24px;
+            text-align: center;
+            backdrop-filter: blur(16px);
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+
+        .today-hijri {
+            font-size: 2.2rem;
+            font-weight: 800;
+            color: var(--gold-glow);
+            margin-bottom: 4px;
+            font-family: var(--arabic-font);
+        }
+
+        .today-gregorian {
+            font-size: 1.05rem;
+            color: #cbd5e1;
+            font-weight: 500;
+        }
+
+        /* Main Grid Layout */
+        .grid-layout {
+            display: grid;
+            grid-template-columns: 1.5fr 1fr;
+            gap: 25px;
+        }
+
+        @media (max-width: 850px) {
+            .grid-layout { grid-template-columns: 1fr; }
+        }
+
+        /* Calendar Controls & Card */
+        .calendar-card {
+            background: var(--card-glass);
+            border: 1px solid var(--border-glass);
+            border-radius: 20px;
+            padding: 20px;
+            backdrop-filter: blur(16px);
+        }
+
+        .calendar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .calendar-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--gold-accent);
+        }
+
+        .month-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid var(--border-glass);
+            color: var(--text-light);
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .month-btn:hover {
+            background: var(--emerald-light);
+            color: #000;
+        }
+
+        /* Days Grid */
+        .weekdays-grid, .days-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 8px;
+            text-align: center;
+        }
+
+        .weekdays-grid div {
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: var(--gold-accent);
+            padding-bottom: 10px;
+        }
+
+        .day-cell {
+            aspect-ratio: 1;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            font-size: 0.95rem;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+
+        .day-cell small {
+            font-size: 0.65rem;
+            color: var(--text-muted);
+            margin-top: 2px;
+        }
+
+        .day-cell.today {
+            border-color: var(--gold-accent);
+            background: rgba(245, 158, 11, 0.2);
+            box-shadow: 0 0 12px rgba(245, 158, 11, 0.3);
+        }
+
+        .day-cell.white-day {
+            background: rgba(16, 185, 129, 0.18);
+            border-color: var(--emerald-light);
+        }
+
+        .day-cell.event-day {
+            background: rgba(236, 72, 153, 0.2);
+            border-color: #ec4899;
+        }
+
+        /* Events Sidebar Card */
+        .events-card {
+            background: var(--card-glass);
+            border: 1px solid var(--border-glass);
+            border-radius: 20px;
+            padding: 20px;
+            backdrop-filter: blur(16px);
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .section-title {
+            font-size: 1.1rem;
+            font-weight: 800;
+            color: var(--gold-accent);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border-bottom: 1px dashed rgba(255,255,255,0.15);
+            padding-bottom: 10px;
+        }
+
+        .event-item {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-left: 4px solid var(--emerald-light);
+            border-radius: 10px;
+            padding: 12px 14px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .event-item.major {
+            border-left-color: var(--gold-accent);
+            background: rgba(245, 158, 11, 0.08);
+        }
+
+        .event-info h4 {
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: #ffffff;
+        }
+
+        .event-info p {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        .event-date {
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: var(--gold-glow);
+            background: rgba(0, 0, 0, 0.3);
+            padding: 4px 8px;
+            border-radius: 6px;
+            text-align: right;
+        }
+
+        /* Key Fasting Note */
+        .fasting-note {
+            background: rgba(16, 185, 129, 0.12);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            border-radius: 12px;
+            padding: 12px;
+            font-size: 0.82rem;
+            color: #a7f3d0;
+            line-height: 1.5;
+        }
+
+        .loader {
+            text-align: center;
+            padding: 40px;
+            color: var(--gold-accent);
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="logo">
+            🌙 Nur AI
+        </div>
+        <div class="nav-links">
+            <a href="Main.html" class="nav-btn">Home</a>
+            <a href="./HTML/qur'an.html" class="nav-btn">Qur'an</a>
+            <a href="hadith.html" class="nav-btn">Hadith</a>
+            <a href="calendar.html" class="nav-btn active">Hijri Calendar</a>
+            <a href="NovaMind_AI_Public_API.html" class="nav-btn">AI Chat</a>
+        </div>
+    </nav>
+
+    <!-- Header -->
+    <header class="hero">
+        <span class="badge">✦ Live Islamic Calendar ✦</span>
+        <h1>Hijri Calendar & Event Tracker</h1>
+        <p style="color: var(--text-muted);">Track holy months, Islamic occasions, and Sunnah fasting days</p>
+    </header>
+
+    <!-- Today Banner -->
+    <div class="today-card">
+        <div id="todayHijri" class="today-hijri">Loading Hijri Date...</div>
+        <div id="todayGregorian" class="today-gregorian"></div>
+    </div>
+
+    <!-- Main Section -->
+    <div class="grid-layout">
+        <!-- Left: Interactive Calendar View -->
+        <div class="calendar-card">
+            <div class="calendar-header">
+                <button class="month-btn" id="prevMonth"><i class="fa-solid fa-chevron-left"></i></button>
+                <span id="calendarMonthTitle" class="calendar-title">Loading Month...</span>
+                <button class="month-btn" id="nextMonth"><i class="fa-solid fa-chevron-right"></i></button>
+            </div>
+
+            <div class="weekdays-grid">
+                <div>SUN</div><div>MON</div><div>TUE</div><div>WED</div><div>THU</div><div>FRI</div><div>SAT</div>
+            </div>
+
+            <div id="calendarDays" class="days-grid">
+                <div class="loader"><i class="fa-solid fa-circle-notch fa-spin fa-2x"></i></div>
+            </div>
+        </div>
+
+        <!-- Right: Important Islamic Events & Sunnah Fasting -->
+        <div class="events-card">
+            <div class="section-title">
+                <i class="fa-solid fa-star-and-crescent"></i>
+                Key Islamic Events (1447–1448 AH)
+            </div>
+
+            <div id="eventsList" style="display: flex; flex-direction: column; gap: 10px;">
+                <!-- Dynamically Populated or Static Key Events List -->
+            </div>
+
+            <div class="fasting-note">
+                <strong><i class="fa-solid fa-circle-info"></i> White Days (Ayyam al-Bidh):</strong>
+                It is Sunnah to fast on the <strong>13th, 14th, and 15th</strong> of every Hijri month (highlighted in green on the calendar).
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // State Management
+    let currentDate = new Date();
+    let currentMonth = currentDate.getMonth();
+    let currentYear = currentDate.getFullYear();
+
+    // Known Islamic Events Dictionary (Hijri Month [1-indexed] & Day)
+    const islamicEvents = {
+        "1-1": { title: "Islamic New Year", desc: "1st Muharram" },
+        "1-10": { title: "Day of Ashura", desc: "Fasting of Ashura", major: true },
+        "3-12": { title: "Mawlid an-Nabi", desc: "12th Rabi' al-Awwal" },
+        "7-27": { title: "Isra and Mi'raj", desc: "27th Rajab" },
+        "8-15": { title: "Shab-e-Barat", desc: "15th Sha'ban" },
+        "9-1": { title: "First Day of Ramadan", desc: "Beginning of Fasting", major: true },
+        "9-21": { title: "Laylat al-Qadr (Odd Nights)", desc: "Last 10 Days of Ramadan", major: true },
+        "9-23": { title: "Laylat al-Qadr (Odd Nights)", desc: "Last 10 Days of Ramadan", major: true },
+        "9-25": { title: "Laylat al-Qadr (Odd Nights)", desc: "Last 10 Days of Ramadan", major: true },
+        "9-27": { title: "Laylat al-Qadr (Odd Nights)", desc: "Last 10 Days of Ramadan", major: true },
+        "9-29": { title: "Laylat al-Qadr (Odd Nights)", desc: "Last 10 Days of Ramadan", major: true },
+        "10-1": { title: "Eid al-Fitr", desc: "1st Shawwal", major: true },
+        "12-1": { title: "First 10 Days of Dhul Hijjah", desc: "Blessed Days of Good Deeds" },
+        "12-9": { title: "Day of Arafah", desc: "Fasting for non-pilgrims", major: true },
+        "12-10": { title: "Eid al-Adha", desc: "10th Dhul Hijjah", major: true }
+    };
+
+    // Major Events List for Sidebar
+    const majorEventsList = [
+        { title: "Islamic New Year", hijri: "1 Muharram" },
+        { title: "Day of Ashura", hijri: "10 Muharram" },
+        { title: "Ramadan Begins", hijri: "1 Ramadan" },
+        { title: "Laylat al-Qadr", hijri: "Last 10 Nights of Ramadan" },
+        { title: "Eid al-Fitr", hijri: "1 Shawwal" },
+        { title: "Day of Arafah", hijri: "9 Dhul Hijjah" },
+        { title: "Eid al-Adha", hijri: "10 Dhul Hijjah" }
+    ];
+
+    async function init() {
+        renderSidebarEvents();
+        await fetchTodayHijri();
+        await renderCalendar(currentYear, currentMonth);
+
+        document.getElementById("prevMonth").addEventListener("click", () => {
+            currentMonth--;
+            if (currentMonth < 0) { currentMonth = 11; currentYear--; }
+            renderCalendar(currentYear, currentMonth);
+        });
+
+        document.getElementById("nextMonth").addEventListener("click", () => {
+            currentMonth++;
+            if (currentMonth > 11) { currentMonth = 0; currentYear++; }
+            renderCalendar(currentYear, currentMonth);
+        });
+    }
+
+    // 1. Fetch Today's Date Info
+    async function fetchTodayHijri() {
+        try {
+            const todayStr = `${currentDate.getDate()}-${currentDate.getMonth()+1}-${currentDate.getFullYear()}`;
+            const res = await fetch(`https://api.aladhan.com/v1/gToH/${todayStr}`);
+            const data = await res.json();
+            
+            if (data.code === 200) {
+                const h = data.data.hijri;
+                const g = data.data.gregorian;
+                
+                document.getElementById("todayHijri").textContent = 
+                    `${h.day} ${h.month.en} (${h.month.ar}) ${h.year} AH`;
+                
+                document.getElementById("todayGregorian").textContent = 
+                    `${g.weekday.en}, ${g.day} ${g.month.en} ${g.year} CE`;
+            }
+        } catch (err) {
+            console.error("Error fetching today's Hijri date:", err);
+            document.getElementById("todayHijri").textContent = "Islamic Calendar";
+        }
+    }
+
+    // 2. Render Calendar Month
+    async function renderCalendar(year, month) {
+        const calendarDays = document.getElementById("calendarDays");
+        calendarDays.innerHTML = `<div class="loader"><i class="fa-solid fa-circle-notch fa-spin fa-2x"></i></div>`;
+
+        const firstDayOfMonth = new Date(year, month, 1);
+        const daysInMonth = new Date(year, month + 1, 0).getDate();
+        const startDayOfWeek = firstDayOfMonth.getDay();
+
+        // Fetch Hijri Data for Month from Aladhan API
+        try {
+            const res = await fetch(`https://api.aladhan.com/v1/gToHCalendar/${month + 1}/${year}`);
+            const data = await res.json();
+            const hijriMonthData = data.data || [];
+
+            // Set Title Header
+            const sampleHijri = hijriMonthData[0]?.hijri;
+            const monthName = firstDayOfMonth.toLocaleString('default', { month: 'long' });
+            document.getElementById("calendarMonthTitle").textContent = 
+                `${monthName} ${year} (${sampleHijri ? sampleHijri.month.en : ''})`;
+
+            calendarDays.innerHTML = "";
+
+            // Empty Cells before start of month
+            for (let i = 0; i < startDayOfWeek; i++) {
+                const emptyCell = document.createElement("div");
+                emptyCell.className = "day-cell";
+                emptyCell.style.opacity = "0.2";
+                calendarDays.appendChild(emptyCell);
+            }
+
+            // Populate Days
+            for (let day = 1; day <= daysInMonth; day++) {
+                const dayData = hijriMonthData[day - 1];
+                const hijriDay = dayData ? dayData.hijri.day : "";
+                const hijriMonthNum = dayData ? dayData.hijri.month.number : 0;
+
+                const cell = document.createElement("div");
+                cell.className = "day-cell";
+
+                // Check if Today
+                const isToday = (day === currentDate.getDate() && month === currentDate.getMonth() && year === currentDate.getFullYear());
+                if (isToday) cell.classList.add("today");
+
+                // Check if White Day (13, 14, 15 Hijri)
+                const isWhiteDay = [13, 14, 15].includes(parseInt(hijriDay));
+                if (isWhiteDay) cell.classList.add("white-day");
+
+                // Check if Event Day
+                const eventKey = `${hijriMonthNum}-${hijriDay}`;
+                const eventObj = islamicEvents[eventKey];
+                if (eventObj) {
+                    cell.classList.add("event-day");
+                    cell.title = eventObj.title;
+                }
+
+                cell.innerHTML = `
+                    <span>${day}</span>
+                    <small>${hijriDay ? hijriDay + ' ' + dayData.hijri.month.en.slice(0,3) : ''}</small>
+                `;
+
+                calendarDays.appendChild(cell);
+            }
+
+        } catch (err) {
+            console.error("Error rendering calendar:", err);
+            calendarDays.innerHTML = `<p style="grid-column: span 7; color: #f87171; text-align: center;">Failed to load calendar data.</p>`;
+        }
+    }
+
+    // 3. Render Events Sidebar
+    function renderSidebarEvents() {
+        const container = document.getElementById("eventsList");
+        container.innerHTML = majorEventsList.map(ev => `
+            <div class="event-item ${ev.hijri.includes('Ramadan') || ev.hijri.includes('Eid') ? 'major' : ''}">
+                <div class="event-info">
+                    <h4>${ev.title}</h4>
+                    <p>Annual Key Date</p>
+                </div>
+                <div class="event-date">${ev.hijri}</div>
+            </div>
+        `).join('');
+    }
+
+    init();
+</script>
+
+</body>
+</html>
